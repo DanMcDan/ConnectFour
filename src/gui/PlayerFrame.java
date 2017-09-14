@@ -32,9 +32,8 @@ public class PlayerFrame extends JFrame{
 		add(wrapper, BorderLayout.CENTER);
 		
 		
-		//Doing things like setting the window size and making it visible
+		//Doing things like setting the window size and making its size static
 		setBounds(200, 200, 700, 400);
-		setVisible(true);
 		setResizable(false);
 
 		//Listener defines what happens when the application is closed
@@ -52,13 +51,13 @@ public class PlayerFrame extends JFrame{
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
-		c.weightx = 0.7;
+		c.weightx = 0.8;
 		c.weighty = 1;
 		c.fill = GridBagConstraints.BOTH;
 		//Begin adding to wrapper
 		wrapper.add(gamePanel, c);
 		c.gridx++;
-		c.weightx = 0.3;
+		c.weightx = 0.2;
 		wrapper.add(menuPanel, c);	//adding the game UI and the menu to the wrapper panel
 	}
 }

@@ -1,16 +1,10 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.regex.Pattern;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -24,10 +18,10 @@ import javax.swing.JTextField;
 public class MenuPanel extends JPanel{
 	private static final long serialVersionUID = -2304450763260224381L;
 	
-	private JTextArea chatArea = new JTextArea();
-	private JScrollPane chatBox = new JScrollPane();
-	private JTextField chatField = new JTextField();
-	private JButton quitButton = new JButton("QUIT");
+	private JTextArea chatArea 		= new JTextArea();
+	private JScrollPane chatBox 	= new JScrollPane();
+	private JTextField chatField 	= new JTextField();
+	private JButton quitButton 		= new JButton("SEND");
 
 	public MenuPanel() {
 		setBorder(BorderFactory.createTitledBorder("Chat"));
@@ -46,16 +40,17 @@ public class MenuPanel extends JPanel{
 		add(lowerPanel, BorderLayout.SOUTH);
 		add(chatBox, BorderLayout.CENTER);
 		chatArea.setEditable(false);
+		chatArea.setWrapStyleWord(true);
+		chatArea.setLineWrap(true);
 		chatBox.getViewport().add(chatArea);
 	}
 
 	private void createListeners() {
-		//create Listener for the quit button
+		//create Listener for the Send button
 		quitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Have this method initiate the quit process
-				System.out.println("Quit pushed");
+				sendMessage();
 			}
 		});
 		
@@ -63,14 +58,18 @@ public class MenuPanel extends JPanel{
 		chatField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!chatField.getText().equals("")) {
-					chatArea.append(chatField.getText() + "\n");
-					chatField.setText("");
-				}
+				sendMessage();
 			}
 			
 		});
 		
 		//add listeners for any future buttons here
+	}
+	
+	private void sendMessage() {
+		if(!chatField.getText().equals("")) {
+			chatArea.append(chatField.getText() + "\n\n");
+			chatField.setText("");
+		}
 	}
 }
