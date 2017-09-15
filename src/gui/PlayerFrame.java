@@ -18,7 +18,7 @@ public class PlayerFrame extends JFrame{
 	
 	private JPanel wrapper 		= new JPanel(new GridBagLayout());
 	private JPanel menuPanel 	= new MenuPanel();
-	private JPanel gamePanel 	= new GamePanel();
+	private JPanel gamePanel 	= new GamePanel(7,6);//Set the width/height to 7x6
 	
 	
 	/**
