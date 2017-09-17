@@ -57,7 +57,7 @@ public class GamePanel extends JPanel{
 					panels[i-1][j].setBorder(BorderFactory.createEtchedBorder());
 					gameBoard.add(panels[i-1][j]);
 				} else {
-					turnButtons[j] = new JButton(":^)");
+					turnButtons[j] = new JButton(Integer.toString(j));
 					gameBoard.add(turnButtons[j]);
 				}
 				

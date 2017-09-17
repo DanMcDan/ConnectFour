@@ -82,11 +82,11 @@ public class Board {
 	 * 			The piece will seek the bottom most row of the column, where no pieces already are
 	 * 
 	 * @return 	Returns -1 if the insert turn was unsuccessful<br>
-	 * 			Returns 0 if the column is full of other pieces<br>
+	 * 			Returns -10 if the column is full of other pieces<br>
 	 * 			Returns the row that the piece was placed in if column was valid
 	 */
 	public int blueTurn(int col) {
-		if (map[0][col] != EMPTY_PIECE) return 0;//This return is just for consistency with checkWin 
+		if (map[0][col] != EMPTY_PIECE) return -10;//This return is just for consistency with checkWin 
 	
 		//Loops through and finds where the piece should be placed, then places it
 		for (int i = 0; i <= map.length - 1; i++) {
@@ -106,7 +106,7 @@ public class Board {
 	 * @return returns true if the specified coordinate satisfies at least one win condition
 	 */
 	public boolean checkWin(int row, int col) {
-		if(row == -1) return false;
+		if(row < 0) return false;
 		if(map[row][col] == EMPTY_PIECE) return false;
 		
 		int counter = 0;
@@ -116,14 +116,16 @@ public class Board {
 		//check vertical
 		for (int i = row; i < map.length; i++) {
 			if (map[i][col] == player) counter++;
-			if (map[i][col] != player) {
-				counter = 0;//Counter resets if the streak is broken
-				player = map[i][col];//This is for starting the new streak, in the case that it breaks
-			}
+			else counter = 0;//Counter resets if the streak is broken
 				
 			if (counter >= 4) return true;
 		}
+		counter = 0;
+		
 		//TODO: Check horizontal
+		for (int i = 0; i < map.length; i++) {
+			
+		}
 		
 		//TODO: Check Diagonal
 		
@@ -136,22 +138,31 @@ public class Board {
 		Board b = new Board(7,6);
 		System.out.println(b.toString() + "\n");
 		
-		System.out.println(b.checkWin(b.blueTurn(0),0));
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.blueTurn(0),0));
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.blueTurn(0),0));
-		System.out.println(b.toString() + "\n");
 		System.out.println(b.checkWin(b.redTurn(0),0));
 		System.out.println(b.toString() + "\n");
+		
 		System.out.println(b.checkWin(b.blueTurn(0),0));
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.redTurn(0),0));
+		
+		System.out.println(b.checkWin(b.blueTurn(0),0));
 		System.out.println(b.toString() + "\n");
+		
+		System.out.println(b.checkWin(b.blueTurn(0),0));
+		System.out.println(b.toString() + "\n");
+		
+		System.out.println(b.checkWin(b.blueTurn(0),0));
+		System.out.println(b.toString() + "\n");
+		
 		System.out.println(b.checkWin(b.redTurn(0),0));
 		System.out.println(b.toString() + "\n");
 		
 		
 		
+		/*
+		 * The statement to execute a turn and check if that was a winning turn is:
+		 * b.checkWin(b.redTurn(column),column);
+		 * or 
+		 * b.checkWin(b.blueTurn(column),column)
+		 */
 	}
 }
