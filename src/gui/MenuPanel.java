@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -22,10 +23,13 @@ public class MenuPanel extends JPanel{
 	private JScrollPane chatBox 	= new JScrollPane();
 	private JTextField chatField 	= new JTextField();
 	private JButton quitButton 		= new JButton("SEND");
+	private String userName;
 
 	public MenuPanel() {
 		setBorder(BorderFactory.createTitledBorder("Chat"));
 		setLayout(new BorderLayout());
+		
+		userName = JOptionPane.showInputDialog(null,"Enter stuff");
 		
 		constructInterface();
 		createListeners();
@@ -34,7 +38,7 @@ public class MenuPanel extends JPanel{
 	private void constructInterface() {
 		JPanel lowerPanel = new JPanel(new BorderLayout());
 		
-		lowerPanel.add(quitButton, BorderLayout.WEST);
+		lowerPanel.add(quitButton, BorderLayout.EAST);
 		lowerPanel.add(chatField, BorderLayout.CENTER);
 		
 		add(lowerPanel, BorderLayout.SOUTH);
@@ -68,7 +72,7 @@ public class MenuPanel extends JPanel{
 	
 	private void sendMessage() {
 		if(!chatField.getText().equals("")) {
-			chatArea.append(chatField.getText() + "\n\n");
+			chatArea.append(userName + ": " + chatField.getText() + "\n\n");
 			chatField.setText("");
 		}
 	}

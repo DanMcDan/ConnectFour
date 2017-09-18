@@ -124,7 +124,10 @@ public class Board {
 		
 		//TODO: Check horizontal
 		for (int i = 0; i < map.length; i++) {
-			
+			if (map[row][i] == player) counter++;
+			else counter = 0;//Counter resets if the streak is broken
+				
+			if (counter >= 4) return true;
 		}
 		
 		//TODO: Check Diagonal
@@ -136,24 +139,25 @@ public class Board {
 	public static void main(String[] args) {
 		
 		Board b = new Board(7,6);
+		int column = 0;
 		System.out.println(b.toString() + "\n");
 		
-		System.out.println(b.checkWin(b.redTurn(0),0));
+		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
 		
-		System.out.println(b.checkWin(b.blueTurn(0),0));
+		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
 		
-		System.out.println(b.checkWin(b.blueTurn(0),0));
+		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
 		
-		System.out.println(b.checkWin(b.blueTurn(0),0));
+		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
 		
-		System.out.println(b.checkWin(b.blueTurn(0),0));
+		System.out.println(b.checkWin(b.blueTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
 		
-		System.out.println(b.checkWin(b.redTurn(0),0));
+		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
 		
 		
