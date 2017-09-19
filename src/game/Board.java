@@ -31,7 +31,7 @@ public class Board {
 	}
 	
 	/**
-	 * Public accessor for the map
+	 * Public getter for the map
 	 * @return Returns a character array representing the game board
 	 */
 	public char[][] getMap() {
@@ -134,8 +134,8 @@ public class Board {
 		
 		//Check Diagonal
 		//top left to bottom right
-		int h,//this is the row of the top left diagonal
-			v;//this is the col of the top left diagonal
+		int h,//this is the row of one of the uppermost diagonals
+			v;//this is the col of one of the uppermost diagonals
 		
 		//This gets the index of the top-leftmost diagonal
 		for (int i = 0;; i++)
@@ -157,7 +157,6 @@ public class Board {
 		}
 		counter = 0;
 		
-		//TODO
 		//Bottom left to top right
 		
 		//Find the top right

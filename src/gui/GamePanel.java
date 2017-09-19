@@ -3,9 +3,16 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
+import game.Board;
+import game.Player;
 
 public class GamePanel extends JPanel{
 	private static final long serialVersionUID = -9100426103735670345L;
@@ -13,6 +20,8 @@ public class GamePanel extends JPanel{
 	//These change the size of the board
 	private int boardWidth = 7;
 	private int boardHeight = 6;
+	
+	private Board board = new Board(7,6);
 
 	private JPanel gameBoard = new JPanel(new GridLayout(boardHeight+1,boardWidth));
 	private JPanel[][] panels = new JPanel[boardHeight][boardWidth];
@@ -63,5 +72,33 @@ public class GamePanel extends JPanel{
 				
 			}
 		}
+		
+		//Listeners for the array of buttons
+		for (int i = 0; i < turnButtons.length; i++) {
+					turnButtons[i].addActionListener(new TurnListener(i));
+		}
+	}
+	
+	public JButton[] getButtons() {
+		return turnButtons;
+	}
+	
+	private class TurnListener implements ActionListener{
+		
+		private int column;
+		
+		public TurnListener(int column) {
+			this.column = column;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("Button: "+column);
+			
+			
+			
+			
+		}
+		
 	}
 }

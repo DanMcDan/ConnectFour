@@ -5,7 +5,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import javax.swing.*;
+
 
 /**
  * Frame object intended to be part of the client side of the Connect Four game.<br>
@@ -16,6 +20,7 @@ import javax.swing.*;
 public class PlayerFrame extends JFrame{
 	private static final long serialVersionUID = -5683163455384492681L;
 	
+	
 	private JPanel wrapper 		= new JPanel(new GridBagLayout());
 	private JPanel menuPanel 	= new MenuPanel();
 	private JPanel gamePanel 	= new GamePanel(7,6);//Set the width/height to 7x6
@@ -25,11 +30,16 @@ public class PlayerFrame extends JFrame{
 	 * Constructor for the window to be used as the game area for Connect Four.<br>
 	 * Sets bounds for window and constructs the <i>MenuPanel</i> and <i>GamePanel</i>
 	 * @param s String value to set the title of the window.
+	 * @param socket 
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	public PlayerFrame(String s) {
+	public PlayerFrame(String s, Socket socket) {
 		super(s);
 		setLayout(new BorderLayout());
 		add(wrapper, BorderLayout.CENTER);
+		
+		
 		
 		
 		//Doing things like setting the window size and making its size static
@@ -44,6 +54,11 @@ public class PlayerFrame extends JFrame{
 				System.exit(0);
 			}
 		});
+		
+		
+		
+		
+		
 		
 		
 		//set GridBagConstraints for the wrapper panel

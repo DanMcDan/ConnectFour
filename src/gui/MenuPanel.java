@@ -3,6 +3,9 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -24,6 +27,7 @@ public class MenuPanel extends JPanel{
 	private JTextField chatField 	= new JTextField();
 	private JButton quitButton 		= new JButton("SEND");
 	private String userName;
+	
 
 	public MenuPanel() {
 		setBorder(BorderFactory.createTitledBorder("Chat"));
@@ -68,11 +72,15 @@ public class MenuPanel extends JPanel{
 		});
 		
 		//add listeners for any future buttons here
+		
 	}
 	
 	private void sendMessage() {
 		if(!chatField.getText().equals("")) {
-			chatArea.append(userName + ": " + chatField.getText() + "\n\n");
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
+			
+			chatArea.append(userName + ": " + chatField.getText() + "\n"+
+							simpleDateFormat.format(Calendar.getInstance().getTime())+"\n\n");
 			chatField.setText("");
 		}
 	}
