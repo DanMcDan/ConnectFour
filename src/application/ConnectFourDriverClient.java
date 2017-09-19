@@ -19,6 +19,7 @@ public class ConnectFourDriverClient {
 		String text = JOptionPane.showInputDialog("Enter Server IP",null);
 		
 		DataInputStream dis;
+		DataOutputStream dos;
 		
 		while(socket == null)
 		{
@@ -35,16 +36,18 @@ public class ConnectFourDriverClient {
 		try {
 			dis = new DataInputStream(socket.getInputStream());
 			player = dis.readChar();
+			
+			dos = new DataOutputStream(socket.getOutputStream());
+			dos.writeChar(player);
+			
+			PlayerFrame pf = new PlayerFrame(text, socket);
+			pf.setVisible(true);
+			
+			dis.close();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
-			
-			
-		PlayerFrame pf = new PlayerFrame(text, socket);
-		pf.setVisible(true);
-			
-		
+		}	
 	}
 
 }

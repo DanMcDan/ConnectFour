@@ -20,6 +20,8 @@ import javax.swing.*;
 public class PlayerFrame extends JFrame{
 	private static final long serialVersionUID = -5683163455384492681L;
 	
+	public static final char RED = 'R';
+	public static final char BLUE= 'B';
 	
 	private JPanel wrapper 		= new JPanel(new GridBagLayout());
 	private JPanel menuPanel 	= new MenuPanel();

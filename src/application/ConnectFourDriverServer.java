@@ -18,7 +18,7 @@ public class ConnectFourDriverServer {
 			//Player[] players;
 			GameThread gt;
 			ServerSocket ss = new ServerSocket(25565);
-			
+			int p = 0;
 			
 			
 			while (true) {
@@ -27,12 +27,19 @@ public class ConnectFourDriverServer {
 				for(int i = 0;i < clients.length;i++) {
 					clients[i] = (ss.accept());//wait for connection
 //					players[i] = new Player(clients[i].getInetAddress().toString(), 25565);
-					gt = new GameThread(clients);//TODO TODO TODO TODO TODO TODO TODO TODO TODO
-					Thread th = new Thread(gt);
-					th.start();
+					
+					if (i == 1) {
+						gt = new GameThread(clients);//TODO TODO TODO TODO TODO TODO TODO TODO TODO
+						Thread th = new Thread(gt);
+						th.start();
+					}
+					
 				}
+				if (p == 10) break;
+				else p++;
+				
 			}
-			
+			ss.close();
 			
 		}catch (Exception e) {e.printStackTrace();}
 		
