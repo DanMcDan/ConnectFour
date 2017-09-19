@@ -1,5 +1,6 @@
 package game;
 
+
 /**
  * Board class containing a "map" of all the pieces involved in a game of Connect Four
  * 
@@ -114,7 +115,7 @@ public class Board {
 		
 		
 		//check vertical
-		for (int i = row; i < map.length; i++) {
+		for (int i = row; i < map.length; i++) {//Starts from the piece just placed, and works downward
 			if (map[i][col] == player) counter++;
 			else counter = 0;//Counter resets if the streak is broken
 				
@@ -122,15 +123,61 @@ public class Board {
 		}
 		counter = 0;
 		
-		//TODO: Check horizontal
-		for (int i = 0; i < map.length; i++) {
+		//Check horizontal
+		for (int i = 0; i < map[row].length; i++) {
 			if (map[row][i] == player) counter++;
 			else counter = 0;//Counter resets if the streak is broken
 				
 			if (counter >= 4) return true;
 		}
+		counter = 0;
 		
-		//TODO: Check Diagonal
+		//Check Diagonal
+		//top left to bottom right
+		int h,//this is the row of the top left diagonal
+			v;//this is the col of the top left diagonal
+		
+		//This gets the index of the top-leftmost diagonal
+		for (int i = 0;; i++)
+			if (row - i == 0 || col - i == 0) {
+			    //top left reached
+				h = row - i;
+				v = col - i;
+				break;
+			}
+		//System.out.println("map["+h+"]["+v+"]"); //CONFIRMED WORKS
+		
+		for (int i = 0; ;i++) {
+			if (h+i > map.length-1 || v+i > map[h+i].length-1)	break;
+			
+			if (map[h+i][v+i] == player)	counter ++;
+			else	counter = 0;
+			
+			if (counter >= 4)	return true;
+		}
+		counter = 0;
+		
+		//TODO
+		//Bottom left to top right
+		
+		//Find the top right
+		for (int i = 0;; i++)
+			if (row - i == 0 || col + i == map[row - i].length-1) {
+			    //top left reached
+				h = row - i;
+				v = col + i;
+				System.out.println(h+","+v);
+				break;
+			}
+		
+		for (int i = 0;;i++) {
+			if (h+i > map.length-1 || v-i < 0)	break;
+			
+			if (map[h+i][v-i] == player)	counter ++;
+			else	counter = 0;
+			
+			if (counter == 4)	return true;
+		}
 		
 		return false;
 	}
@@ -142,23 +189,53 @@ public class Board {
 		int column = 0;
 		System.out.println(b.toString() + "\n");
 		
+		
+		
+		System.out.println(b.checkWin(b.blueTurn(2),2));
+		System.out.println(b.toString() + "\n");
+		System.out.println(b.checkWin(b.blueTurn(1),1));
+		System.out.println(b.toString() + "\n");
+		System.out.println(b.checkWin(b.blueTurn(0),0));
+		System.out.println(b.toString() + "\n");
+		System.out.println(b.checkWin(b.blueTurn(0),0));
+		System.out.println(b.toString() + "\n");
+		System.out.println(b.checkWin(b.blueTurn(1),1));
+		System.out.println(b.toString() + "\n");
+		System.out.println(b.checkWin(b.blueTurn(0),0));
+		System.out.println(b.toString() + "\n");
+		
+		
 		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
+		System.out.println(b.toString() + "\n");
+		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
+		System.out.println(b.toString() + "\n");
+		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
+		System.out.println(b.toString() + "\n");
+		/*System.out.println(b.checkWin(b.redTurn(column),column));*/ column++;
+		//System.out.println(b.toString() + "\n");
+		
+		System.out.println(b.checkWin(b.blueTurn(4),4));
+		System.out.println(b.toString() + "\n");
+		System.out.println(b.checkWin(b.blueTurn(5),5));
+		System.out.println(b.toString() + "\n");
+		System.out.println(b.checkWin(b.blueTurn(5),5));
+		System.out.println(b.toString() + "\n");
+		System.out.println(b.checkWin(b.blueTurn(6),6));
+		System.out.println(b.toString() + "\n");
+		System.out.println(b.checkWin(b.blueTurn(6),6));
+		System.out.println(b.toString() + "\n");
+		System.out.println(b.checkWin(b.blueTurn(6),6));
 		System.out.println(b.toString() + "\n");
 		
 		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
-		
 		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
-		
-		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
-		System.out.println(b.toString() + "\n");
-		
 		System.out.println(b.checkWin(b.blueTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
-		
-		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
+		System.out.println(b.checkWin(b.redTurn(3),3));
 		System.out.println(b.toString() + "\n");
+		
 		
 		
 		
