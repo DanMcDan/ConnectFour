@@ -9,9 +9,9 @@ package game;
  */
 public class Board {
 	
-	private final char RED_PIECE = 'X';
-	private final char BLUE_PIECE = 'O';
-	private final char EMPTY_PIECE = '*';
+	public static final char RED_PIECE = 'X';
+	public static final char BLUE_PIECE = 'O';
+	public static final char EMPTY_PIECE = '*';
 
 	private char map[][];
 	
@@ -165,7 +165,6 @@ public class Board {
 			    //top left reached
 				h = row - i;
 				v = col + i;
-				System.out.println(h+","+v);
 				break;
 			}
 		

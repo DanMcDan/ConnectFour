@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
-
-import game.Player;
 import gui.PlayerFrame;
 
 public class ConnectFourDriverServer {
@@ -23,15 +21,17 @@ public class ConnectFourDriverServer {
 			
 			while (true) {
 				clients = new Socket[2];
-//				players = new Player[2];
 				for(int i = 0;i < clients.length;i++) {
+					System.out.println("Looking for connection...");
 					clients[i] = (ss.accept());//wait for connection
-//					players[i] = new Player(clients[i].getInetAddress().toString(), 25565);
+					System.out.println("Connected!");
 					
 					if (i == 1) {
-						gt = new GameThread(clients);//TODO TODO TODO TODO TODO TODO TODO TODO TODO
+						System.out.println("Match starting...");
+						gt = new GameThread(clients);
 						Thread th = new Thread(gt);
 						th.start();
+						System.out.println("Done!");
 					}
 					
 				}

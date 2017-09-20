@@ -12,7 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import game.Board;
-import game.Player;
 
 public class GamePanel extends JPanel{
 	private static final long serialVersionUID = -9100426103735670345L;
@@ -44,11 +43,6 @@ public class GamePanel extends JPanel{
 		
 		constructGameBoard();
 		add(gameBoard, BorderLayout.CENTER);
-		
-		/*
-		 * TODO: make the logical board, and figure out how to connect it to the graphical board
-		 */
-		
 	}
 	
 	
@@ -73,32 +67,15 @@ public class GamePanel extends JPanel{
 			}
 		}
 		
-		//Listeners for the array of buttons
-		for (int i = 0; i < turnButtons.length; i++) {
-					turnButtons[i].addActionListener(new TurnListener(i));
-		}
+		
 	}
 	
 	public JButton[] getButtons() {
 		return turnButtons;
 	}
-	
-	private class TurnListener implements ActionListener{
-		
-		private int column;
-		
-		public TurnListener(int column) {
-			this.column = column;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			System.out.println("Button: "+column);
-			
-			
-			
-			
-		}
-		
+	public JPanel[][] getPanels() {
+		return panels;
 	}
+	
+	
 }
