@@ -4,9 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-
 import javax.swing.JOptionPane;
-
 import gui.PlayerFrame;
 
 public class ConnectFourDriverClient {
@@ -19,6 +17,8 @@ public class ConnectFourDriverClient {
 		
 		char player = 0;
 		PlayerFrame pf;
+		int boardWidth = 7;
+		int boardHeight = 6;
 		
 		
 		//Connect to server
@@ -43,7 +43,7 @@ public class ConnectFourDriverClient {
 		}catch (IOException e) {e.printStackTrace();}
 		
 		//Open the window
-		pf = new PlayerFrame(adder + " " + player, player);
+		pf = new PlayerFrame(adder + " " + player, player, boardWidth, boardHeight);
 		pf.setVisible(true);
 		pf.enableButtons();
 	}

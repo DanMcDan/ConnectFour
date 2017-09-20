@@ -43,13 +43,13 @@ public class PlayerFrame extends JFrame{
 	 * @throws IOException 
 	 * @throws UnknownHostException 
 	 */
-	public PlayerFrame(String s, char player) {
+	public PlayerFrame(String s, char player, int boardWidth, int boardHeight) {
 		super(s + " -- " + player);
 		
-		board = new Board(7,6);
+		board = new Board(boardWidth,boardHeight);
 		//this.socket = socket;
 		this.player = player;
-		gamePanel = new GamePanel(7,6);//Set the width/height to 7x6
+		gamePanel = new GamePanel(boardWidth,boardHeight);//Set the width/height to 7x6
 		disableButtons();
 		createTurnListeners();
 		
@@ -103,7 +103,7 @@ public class PlayerFrame extends JFrame{
 	
 	//This method will make decide if a redTurn or blueTurn should be made
 	//then it executes the updateBoard method, so the gui is correct
-	private synchronized void makeTurn(int column) {
+	private void makeTurn(int column) {
 		
 		
 		if(player == BLUE) {
@@ -127,9 +127,7 @@ public class PlayerFrame extends JFrame{
 	 * Method that takes the logical board and updates the graphical board with it
 	 */
 	private void updateBoard() {
-		
 		gamePanel.updatePanels(board);
-		System.out.println("Board updated");
 	}
 	
 	

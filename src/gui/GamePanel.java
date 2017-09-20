@@ -17,14 +17,14 @@ public class GamePanel extends JPanel{
 	private static final long serialVersionUID = -9100426103735670345L;
 	
 	//These change the size of the board
-	private int boardWidth = 7;
-	private int boardHeight = 6;
+	private int boardWidth;
+	private int boardHeight;
 	
 //	private Board board = new Board(7,6);
 
-	private JPanel gameBoard = new JPanel(new GridLayout(boardHeight+1,boardWidth));
-	private JPanel[][] panels = new JPanel[boardHeight][boardWidth];
-	private JButton[] turnButtons = new JButton[boardWidth];
+	private JPanel gameBoard;
+	private JPanel[][] panels;
+	private JButton[] turnButtons;
 	
 	
 	/**
@@ -37,6 +37,10 @@ public class GamePanel extends JPanel{
 	public GamePanel(int boardWidth, int boardHeight) {
 		this.boardHeight = boardHeight;
 		this.boardWidth = boardWidth;
+		
+		gameBoard = new JPanel(new GridLayout(boardHeight+1,boardWidth));
+		panels = new JPanel[boardHeight][boardWidth];
+		turnButtons = new JButton[boardWidth];
 		
 		setLayout(new BorderLayout());
 		setBorder(BorderFactory.createLoweredBevelBorder());
@@ -71,14 +75,11 @@ public class GamePanel extends JPanel{
 	public void updatePanels(Board board) {
 		for (int i = 0; i < panels.length; i++) {
 			for (int j = 0; j < panels[i].length; j++) {
-				if (board.getMap()[i][j] == Board.RED_PIECE) {
+				if (board.getMap()[i][j] == Board.RED_PIECE)
 					panels[i][j].setBackground(Color.RED);
-					System.out.println("["+i+"]["+j+"]");
-				}
-				else if (board.getMap()[i][j] == Board.BLUE_PIECE) {
+				
+				else if (board.getMap()[i][j] == Board.BLUE_PIECE)
 					panels[i][j].setBackground(Color.BLUE);
-					System.out.println("["+i+"]["+j+"]");
-				}
 			}
 		}
 	}

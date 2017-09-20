@@ -11,7 +11,7 @@ public class ConnectFourDriverServer {
 			Socket[] clients;
 			GameThread gt;
 			ServerSocket ss = new ServerSocket(25565);
-			int p = 0;
+			int threads = 0;
 			
 			
 			while (true) {
@@ -30,8 +30,8 @@ public class ConnectFourDriverServer {
 					}
 					
 				}
-				if (p == 10) break;
-				else p++;
+				if (threads == 10) break;
+				else threads++;
 				
 			}
 			ss.close();
