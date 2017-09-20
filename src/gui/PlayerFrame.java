@@ -8,12 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import javax.swing.*;
-
 import game.Board;
 
 
@@ -34,7 +31,7 @@ public class PlayerFrame extends JFrame{
 	private MenuPanel menuPanel = new MenuPanel();
 	private GamePanel gamePanel;
 	
-	private Socket socket;
+	//private Socket socket;
 	private Board board;
 	
 	
@@ -46,10 +43,11 @@ public class PlayerFrame extends JFrame{
 	 * @throws IOException 
 	 * @throws UnknownHostException 
 	 */
-	public PlayerFrame(String s, Socket socket, char player) {
+	public PlayerFrame(String s, char player) {
 		super(s + " -- " + player);
 		
-		this.socket = socket;
+		board = new Board(7,6);
+		//this.socket = socket;
 		this.player = player;
 		gamePanel = new GamePanel(7,6);//Set the width/height to 7x6
 		disableButtons();
@@ -103,43 +101,25 @@ public class PlayerFrame extends JFrame{
 	}
 	
 	
-	/**
-	 * Creates a string which is meant to represent a players turn<br>
-	 * Turn is meant to be taken locally, and then sent to the server, where its board is updated
-	 * @param column column where the player wishes to drop a piece
-	 * @return returns the turn's column and player character in the form X;n<br>
-	 * Where 'X' is the player's colour (B for blue R for red) and n represents the column number
-	 */
+	//This method will make decide if a redTurn or blueTurn should be made
+	//then it executes the updateBoard method, so the gui is correct
 	private synchronized void makeTurn(int column) {
-		String out = player + ";" + column;
-		
-		try
-		{
-			
-			DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-			dos.writeUTF(out);
-		
-		} catch (IOException e) {e.printStackTrace();}
 		
 		
 		if(player == BLUE) {
-			board.redTurn(column);
+			if(board.checkWin(board.blueTurn(column), column)) {
+				JOptionPane.showMessageDialog(this, "Blue wins!");
+			}
 		} else if (player == RED) {
-			board.blueTurn(column);
+			if(board.checkWin(board.redTurn(column), column)) {
+				JOptionPane.showMessageDialog(this, "Red wins!");
+			}
 		}
-		
-		
-		
 		updateBoard();
-		disableButtons();
-	}
-	
-	
-	public void takeTurn(String in) {
-		int column = Integer.valueOf(in.split(";")[2]);
 		
-		
-		
+		//This is for preventing the player who isnt taking a turn
+		//from pushing buttons
+		//disableButtons();
 	}
 	
 	
@@ -147,14 +127,9 @@ public class PlayerFrame extends JFrame{
 	 * Method that takes the logical board and updates the graphical board with it
 	 */
 	private void updateBoard() {
-		for (int i = 0; i < 0; i++) {
-			for (int j = 0; j < 0; j++) {
-				if (board.getMap()[i][j] == Board.RED_PIECE)
-					gamePanel.getPanels()[i][j].setBackground(Color.RED);
-				else if (board.getMap()[i][j] == Board.BLUE_PIECE)
-					gamePanel.getPanels()[i][j].setBackground(Color.BLUE);
-			}
-		}
+		
+		gamePanel.updatePanels(board);
+		System.out.println("Board updated");
 	}
 	
 	

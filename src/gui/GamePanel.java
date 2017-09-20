@@ -20,7 +20,7 @@ public class GamePanel extends JPanel{
 	private int boardWidth = 7;
 	private int boardHeight = 6;
 	
-	private Board board = new Board(7,6);
+//	private Board board = new Board(7,6);
 
 	private JPanel gameBoard = new JPanel(new GridLayout(boardHeight+1,boardWidth));
 	private JPanel[][] panels = new JPanel[boardHeight][boardWidth];
@@ -66,8 +66,21 @@ public class GamePanel extends JPanel{
 				
 			}
 		}
-		
-		
+	}
+	
+	public void updatePanels(Board board) {
+		for (int i = 0; i < panels.length; i++) {
+			for (int j = 0; j < panels[i].length; j++) {
+				if (board.getMap()[i][j] == Board.RED_PIECE) {
+					panels[i][j].setBackground(Color.RED);
+					System.out.println("["+i+"]["+j+"]");
+				}
+				else if (board.getMap()[i][j] == Board.BLUE_PIECE) {
+					panels[i][j].setBackground(Color.BLUE);
+					System.out.println("["+i+"]["+j+"]");
+				}
+			}
+		}
 	}
 	
 	public JButton[] getButtons() {

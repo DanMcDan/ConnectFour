@@ -4,66 +4,47 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketAddress;
 
 import javax.swing.JOptionPane;
 
-import game.Board;
 import gui.PlayerFrame;
 
 public class ConnectFourDriverClient {
 	
-	private static char player;
-	
 	public static void main(String[] args) {
-		Board board = new Board(7,6);//this is the 7x6 board
+		DataOutputStream dos;//Stream for Sending
+		DataInputStream dis;//stream for Receiving
+		Socket s = null;
+		String adder = JOptionPane.showInputDialog("Enter server IP",null);
 		
-		Socket socket = null;
-		String text = JOptionPane.showInputDialog("Enter Server IP",null);
+		char player = 0;
+		PlayerFrame pf;
 		
-		DataInputStream dis;
-		DataOutputStream dos;
 		
-		while(socket == null)
-		{
+		//Connect to server
+		while (s == null) {
 			try
 			{
-				socket = new Socket(text, 25565);
+				s = new Socket(adder, 25565);
 			} catch (IOException e) {
-				e.printStackTrace();
-				socket = null;
-				text = JOptionPane.showInputDialog("Enter Server IP",null);
+				adder = JOptionPane.showInputDialog("Oops, enter the IP again",null);
 			}
 		}
 		
-		try {
-			dis = new DataInputStream(socket.getInputStream());
+		try
+		{
+			//Get player colour and send response
+			dis = new DataInputStream(s.getInputStream());
 			player = dis.readChar();
 			
-			dos = new DataOutputStream(socket.getOutputStream());
+			dos = new DataOutputStream(s.getOutputStream());
 			dos.writeChar(player);
 			
-			PlayerFrame pf = new PlayerFrame(text, socket, player);
-			pf.setVisible(true);
-						
-			
-			while(true) {
-				//This players turn has just begun
-				dis = new DataInputStream(socket.getInputStream());
-				System.out.println(dis.readUTF());
-				
-				pf.enableButtons();
-				
-				
-			}
-			
-			
-			
-			
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}	
+		}catch (IOException e) {e.printStackTrace();}
+		
+		//Open the window
+		pf = new PlayerFrame(adder + " " + player, player);
+		pf.setVisible(true);
+		pf.enableButtons();
 	}
-
 }

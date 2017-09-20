@@ -23,7 +23,6 @@ public class GameThread implements Runnable{
 	 */
 	private void playGame() {
 		boolean gameOver = false;
-		String[] turn;
 		DataOutputStream dos;//Stream for Sending
 		DataInputStream dis;//stream for Receiving
 		try
@@ -33,41 +32,21 @@ public class GameThread implements Runnable{
 			for (int i = 0; i < clients.length; i++) {
 				dos = new DataOutputStream(clients[i].getOutputStream());
 				dis = new DataInputStream(clients[i].getInputStream());
-				dos.writeChar(i==0 ? PlayerFrame.BLUE:PlayerFrame.RED);
+				dos.writeChar(i == 0 ? PlayerFrame.BLUE:PlayerFrame.RED);
+				
+				
 				//Print out the character that has hopefully gotten there
-				System.out.println("host: "+clients[i].getInetAddress().toString()+" as player: "+dis.readChar());
-				
-				
+				System.out.println("Client: "+clients[i].getInetAddress().toString()+" as player: "+dis.readChar());
 			}
 			
 			//Both players now have a colour, now turns should be made
+			//Not sure why synchronizing it helped before
 			for (int i = 0; !gameOver; i++) {
 				synchronized(this) {
-					//Sends a string to wake up client
-					System.out.println("Player "+(i+1)+"start");
-					dos = new DataOutputStream(clients[i].getOutputStream());
-					dos.writeUTF("Start Turn");
-					
-					//waits for button to be pressed
-					dis = new DataInputStream(clients[i].getInputStream());
-					turn = dis.readUTF().split(";");
-					
-					System.out.println(turn);
-					
-					String player = turn[0];
-					int column = Integer.valueOf(turn[1]);
-					
-					if (player.equals("B"))
-						gameOver = board.checkWin(board.redTurn(column),column);
-					else
-						gameOver = board.checkWin(board.blueTurn(column),column);
-					
+					//TODO: here should be where clients[i] is the client whose turn it currently is
 					i%=2;
-					dis.close();
 				}
 			}
-			
-			
 			
 		}catch(IOException e) {e.printStackTrace();}
 	}

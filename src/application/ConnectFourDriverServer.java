@@ -1,11 +1,7 @@
 package application;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Vector;
-import gui.PlayerFrame;
 
 public class ConnectFourDriverServer {
 	public static void main(String[] args) {
@@ -13,7 +9,6 @@ public class ConnectFourDriverServer {
 		try
 		{
 			Socket[] clients;
-			//Player[] players;
 			GameThread gt;
 			ServerSocket ss = new ServerSocket(25565);
 			int p = 0;
