@@ -17,15 +17,16 @@ public class ConnectFourDriverClient {
 		
 		char player = 0;
 		PlayerFrame pf;
-		int boardWidth = 7;
-		int boardHeight = 6;
+		int boardWidth = 7;//These determine the board dimensions
+		int boardHeight = 6;	//TODO:	Currently these numbers have to match the board
+								//		on GameThread object, which needs to be changed
 		
 		
 		//Connect to server
 		while (s == null) {
 			try
 			{
-				s = new Socket(adder, 25565);
+				s = new Socket(adder, 2282);
 			} catch (IOException e) {
 				adder = JOptionPane.showInputDialog("Oops, enter the IP again",null);
 			}
@@ -33,14 +34,16 @@ public class ConnectFourDriverClient {
 		
 		try
 		{
-			//Get player colour and send response
+			//Get player colour and send response to confirm
 			dis = new DataInputStream(s.getInputStream());
-			player = dis.readChar();
+			player = dis.readChar();//Take player assignment
 			
 			dos = new DataOutputStream(s.getOutputStream());
-			dos.writeChar(player);
+			dos.writeChar(player);//send confirmation
 			
 		}catch (IOException e) {e.printStackTrace();}
+		
+		
 		
 		//Open the window
 		pf = new PlayerFrame(adder + " " + player, player, boardWidth, boardHeight);

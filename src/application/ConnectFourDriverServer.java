@@ -10,7 +10,7 @@ public class ConnectFourDriverServer {
 		{
 			Socket[] clients;
 			GameThread gt;
-			ServerSocket ss = new ServerSocket(25565);
+			ServerSocket ss = new ServerSocket(2282);
 			int threads = 0;
 			
 			

@@ -117,6 +117,8 @@ public class PlayerFrame extends JFrame{
 		}
 		updateBoard();
 		
+		//TODO: This is where the turn should be sent to the server (?)
+		
 		//This is for preventing the player who isnt taking a turn
 		//from pushing buttons
 		//disableButtons();
