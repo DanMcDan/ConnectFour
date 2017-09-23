@@ -1,11 +1,6 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -25,7 +20,8 @@ public class MenuPanel extends JPanel{
 	private JTextArea chatArea 		= new JTextArea();
 	private JScrollPane chatBox 	= new JScrollPane();
 	private JTextField chatField 	= new JTextField();
-	private JButton quitButton 		= new JButton("SEND");
+	private JButton chatButton 		= new JButton("Send");
+
 	private String userName;
 	
 
@@ -36,13 +32,12 @@ public class MenuPanel extends JPanel{
 		userName = JOptionPane.showInputDialog(null,"Enter stuff");
 		
 		constructInterface();
-		createListeners();
 	}
 	
 	private void constructInterface() {
 		JPanel lowerPanel = new JPanel(new BorderLayout());
 		
-		lowerPanel.add(quitButton, BorderLayout.EAST);
+		lowerPanel.add(chatButton, BorderLayout.EAST);
 		lowerPanel.add(chatField, BorderLayout.CENTER);
 		
 		add(lowerPanel, BorderLayout.SOUTH);
@@ -52,36 +47,20 @@ public class MenuPanel extends JPanel{
 		chatArea.setLineWrap(true);
 		chatBox.getViewport().add(chatArea);
 	}
+	
+	public JButton getChatButton() {
+		return chatButton;
+	}
 
-	private void createListeners() {
-		//create Listener for the Send button
-		quitButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				sendMessage();
-			}
-		});
-		
-		//listener for chat box
-		chatField.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendMessage();
-			}
-			
-		});
-		
-		//add listeners for any future buttons here
-		
+	public JTextField getChatField() {
+		return chatField;
 	}
 	
-	private void sendMessage() {
-		if(!chatField.getText().equals("")) {
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
-			
-			chatArea.append(userName + ": " + chatField.getText() + "\n"+
-							simpleDateFormat.format(Calendar.getInstance().getTime())+"\n\n");
-			chatField.setText("");
-		}
+	public JTextArea getChatArea() {
+		return chatArea;
+	}
+	
+	public String getUserName() {
+		return userName;
 	}
 }

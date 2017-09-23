@@ -23,7 +23,7 @@ public class ConnectFourDriverServer {
 					
 					if (i == 1) {
 						System.out.println("Match starting...");
-						gt = new GameThread(clients);
+						gt = new GameThread(clients[0], clients[1]);
 						Thread th = new Thread(gt);
 						th.start();
 						System.out.println("Done!");
@@ -37,9 +37,5 @@ public class ConnectFourDriverServer {
 			ss.close();
 			
 		}catch (Exception e) {e.printStackTrace();}
-		
-		
-//		PlayerFrame pf = new PlayerFrame("Connect Four");
-//		pf.setVisible(true);
 	}
 }

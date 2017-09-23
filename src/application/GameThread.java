@@ -1,58 +1,61 @@
 package application;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import game.Board;
+import java.util.Observable;
+import java.util.Observer;
 import gui.PlayerFrame;
 
-public class GameThread implements Runnable{
+public class GameThread implements Runnable, Observer{
 	
-	private Socket clients[];
-	private Board board = new Board(7,6);//this is the 7x6 board
+	private Socket pl1;
+	private Socket pl2;
 	
-	public GameThread(Socket[] clients) {
-		this.clients = clients;	//Takes the array of client sockets
-								//NOTE: SHOULD NEVER BE MORE THAN TWO
-	}
+	private ObjectOutputStream oos1;
+	private ObjectOutputStream oos2;
 	
+	private InputListener il1;
+	private InputListener il2;
 	
-	/**
-	 * Method that assigns both players a colour and begins trading turns
-	 */
-	private void playGame() {
-		boolean gameOver = false;
-		DataOutputStream dos;//Stream for Sending
-		DataInputStream dis;//stream for Receiving
+	public GameThread(Socket pl1, Socket pl2) {
+		this.pl1 = pl1;
+		this.pl2 = pl2;
+		
 		try
 		{
-			//for loop to assign both players their colour
-			//Player 1 is blue and the second is red
-			for (int i = 0; i < clients.length; i++) {
-				dos = new DataOutputStream(clients[i].getOutputStream());
-				dis = new DataInputStream(clients[i].getInputStream());
-				dos.writeChar(i == 0 ? PlayerFrame.BLUE:PlayerFrame.RED);
-				
-				
-				//Print out the character that has hopefully gotten there
-				System.out.println("Client: "+clients[i].getInetAddress().toString()+" as player: "+dis.readChar());
-			}
-			
-			//Both players now have a colour, now turns should be made
-			//Not sure why synchronizing it helped before
-			for (int i = 0; !gameOver; i++) {
-				synchronized(this) {
-					//TODO: here should be where clients[i] is the client whose turn it currently is
-					i%=2;
-				}
-			}
-			
-		}catch(IOException e) {e.printStackTrace();}
+			oos1 = new ObjectOutputStream(pl1.getOutputStream());
+			oos2 = new ObjectOutputStream(pl2.getOutputStream());
+		}
+		catch (IOException e) {e.printStackTrace();}
+		
+		
+		il1 = new InputListener(this.pl1, this);
+		il2 = new InputListener(this.pl2, this);
+		Thread th1 = new Thread(il1);
+		Thread th2 = new Thread(il2);
+		th1.start(); th2.start();//Start listening
 	}
 	
 	@Override
 	public void run() {
-		playGame();
+		
+			System.out.println("Client: "+pl1.getInetAddress().toString()+" as player: "+PlayerFrame.BLUE);
+			System.out.println("Client: "+pl2.getInetAddress().toString()+" as player: "+PlayerFrame.RED);
+			
+	}
+
+
+	@Override
+	public void update(Observable o, Object arg) {
+		try 
+		{
+			if (o == il1) {
+				oos2.writeObject(arg);
+			} else if (o == il2) {
+				oos1.writeObject(arg);
+			}
+		}
+		catch (IOException e) {e.printStackTrace();}
 	}
 }

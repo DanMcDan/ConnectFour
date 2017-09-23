@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -9,8 +8,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.*;
+import application.InputListener;
+import chat.Message;
 import game.Board;
 
 
@@ -20,16 +25,20 @@ import game.Board;
  * @author Daniel McCann
  *
  */
-public class PlayerFrame extends JFrame{
+public class PlayerFrame extends JFrame implements Observer {
 	private static final long serialVersionUID = -5683163455384492681L;
 	
 	public static final char RED = 'R';
 	public static final char BLUE= 'B';
-	private char player;
+	
 	
 	private JPanel wrapper 		= new JPanel(new GridBagLayout());
 	private MenuPanel menuPanel = new MenuPanel();
 	private GamePanel gamePanel;
+	
+	private Socket socket;
+	private InputListener il;
+	private ObjectOutputStream oos;
 	
 	//private Socket socket;
 	private Board board;
@@ -43,15 +52,27 @@ public class PlayerFrame extends JFrame{
 	 * @throws IOException 
 	 * @throws UnknownHostException 
 	 */
-	public PlayerFrame(String s, char player, int boardWidth, int boardHeight) {
-		super(s + " -- " + player);
+	public PlayerFrame(String title, Socket socket, char player, int boardWidth, int boardHeight) {
+		super(title);
 		
 		board = new Board(boardWidth,boardHeight);
-		//this.socket = socket;
-		this.player = player;
+		this.socket = socket;
 		gamePanel = new GamePanel(boardWidth,boardHeight);//Set the width/height to 7x6
-		disableButtons();
 		createTurnListeners();
+		createChatListeners();
+		
+		
+		this.socket = socket;
+		il = new InputListener(this.socket, 'P', this);
+		
+		try
+		{
+			oos = new ObjectOutputStream(this.socket.getOutputStream());
+		}
+		
+		catch (IOException e1) {e1.printStackTrace();}
+		Thread th = new Thread(il);
+		th.start();//Start listening
 		
 		setLayout(new BorderLayout());
 		add(wrapper, BorderLayout.CENTER);
@@ -100,28 +121,64 @@ public class PlayerFrame extends JFrame{
 		}
 	}
 	
+	private void createChatListeners() {
+		//create Listener for the Send button
+		menuPanel.getChatButton().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				sendMessage();
+			}
+		});
+		
+		//listener for chat box
+		menuPanel.getChatField().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sendMessage();
+			}
+			
+		});
+	}
+	
+	
+	private void sendMessage() {
+		if(!menuPanel.getChatField().getText().equals("")) {
+			Message m = new Message(menuPanel.getChatField().getText(), menuPanel.getUserName());
+			// TODO: send message to other player
+			try
+			{
+				oos.writeObject(m);
+			}
+			catch (IOException e) {e.printStackTrace();}
+			
+			menuPanel.getChatArea().append(m.toString());
+			menuPanel.getChatField().setText("");
+		}
+		
+	}
+	
 	
 	//This method will make decide if a redTurn or blueTurn should be made
 	//then it executes the updateBoard method, so the gui is correct
 	private void makeTurn(int column) {
 		
 		
-		if(player == BLUE) {
-			if(board.checkWin(board.blueTurn(column), column)) {
-				JOptionPane.showMessageDialog(this, "Blue wins!");
-			}
-		} else if (player == RED) {
-			if(board.checkWin(board.redTurn(column), column)) {
-				JOptionPane.showMessageDialog(this, "Red wins!");
-			}
+		if (board.checkWin(board.myTurn(column), column)) {
+			updateBoard();
+			JOptionPane.showMessageDialog(this, "You win!");
 		}
+		
+			
 		updateBoard();
+		disableButtons();
+		try
+		{
+			oos.writeObject(new Integer(column));
+		} catch (IOException e) {e.printStackTrace();}
 		
-		//TODO: This is where the turn should be sent to the server (?)
-		
-		//This is for preventing the player who isnt taking a turn
+		//This is for preventing the player who isn't taking a turn
 		//from pushing buttons
-		//disableButtons();
+		
 	}
 	
 	
@@ -145,8 +202,25 @@ public class PlayerFrame extends JFrame{
 			gamePanel.getButtons()[i].setEnabled(true);
 		}
 	}
-	
-	
+
+	@Override
+	public void update(Observable o, Object arg) {
+		
+		
+		
+		if (arg instanceof Message) {
+			System.out.println("Messaged");
+			Message m = (Message) arg;
+			menuPanel.getChatArea().append(m.toString());
+		}
+		else if (arg instanceof Integer) {
+			System.out.println("Turn taken");
+			board.theirTurn((int)arg);
+			gamePanel.updatePanels(board);
+			enableButtons();
+		}
+		
+	}
 	
 	private class TurnListener implements ActionListener{
 		

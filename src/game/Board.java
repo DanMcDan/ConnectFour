@@ -9,8 +9,8 @@ package game;
  */
 public class Board {
 	
-	public static final char RED_PIECE = 'X';
-	public static final char BLUE_PIECE = 'O';
+	public static final char MY_PIECE = 'X';
+	public static final char THEIR_PIECE = 'O';
 	public static final char EMPTY_PIECE = '*';
 
 	private char map[][];
@@ -63,13 +63,13 @@ public class Board {
 	 * 			Returns 0 if the column is full of other pieces<br>
 	 * 			Returns the row that the piece was placed in if column was valid
 	 */
-	public int redTurn(int col) {
+	public int theirTurn(int col) {
 		if (map[0][col] != EMPTY_PIECE) return 0;//This return is just for consistency with checkWin 
 	
 		//Loops through and finds where the piece should be placed
 		for (int i = 0; i <= map.length - 1; i++) {
 			if (i == map.length-1 || map[i+1][col] != EMPTY_PIECE) {
-				map[i][col] = RED_PIECE;
+				map[i][col] = THEIR_PIECE;
 				return i;//NOTE: This returns the row that the spot was found in
 			}			 //		 when using checkWin, the column must be used with this return value
 		}
@@ -86,13 +86,13 @@ public class Board {
 	 * 			Returns -10 if the column is full of other pieces<br>
 	 * 			Returns the row that the piece was placed in if column was valid
 	 */
-	public int blueTurn(int col) {
+	public int myTurn(int col) {
 		if (map[0][col] != EMPTY_PIECE) return -10;//This return is just for consistency with checkWin 
 	
 		//Loops through and finds where the piece should be placed, then places it
 		for (int i = 0; i <= map.length - 1; i++) {
 			if (i == map.length-1 || map[i+1][col] != EMPTY_PIECE) {
-				map[i][col] = BLUE_PIECE;
+				map[i][col] = MY_PIECE;
 				return i;//NOTE: This returns the row that the spot was found in
 			}			 //		 when using checkWin, the column must be used with this return value
 		}
@@ -189,49 +189,49 @@ public class Board {
 		
 		
 		
-		System.out.println(b.checkWin(b.blueTurn(2),2));
+		System.out.println(b.checkWin(b.myTurn(2),2));
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.blueTurn(1),1));
+		System.out.println(b.checkWin(b.myTurn(1),1));
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.blueTurn(0),0));
+		System.out.println(b.checkWin(b.myTurn(0),0));
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.blueTurn(0),0));
+		System.out.println(b.checkWin(b.myTurn(0),0));
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.blueTurn(1),1));
+		System.out.println(b.checkWin(b.myTurn(1),1));
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.blueTurn(0),0));
+		System.out.println(b.checkWin(b.myTurn(0),0));
 		System.out.println(b.toString() + "\n");
 		
 		
-		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
+		System.out.println(b.checkWin(b.theirTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
+		System.out.println(b.checkWin(b.theirTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
+		System.out.println(b.checkWin(b.theirTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
 		/*System.out.println(b.checkWin(b.redTurn(column),column));*/ column++;
 		//System.out.println(b.toString() + "\n");
 		
-		System.out.println(b.checkWin(b.blueTurn(4),4));
+		System.out.println(b.checkWin(b.myTurn(4),4));
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.blueTurn(5),5));
+		System.out.println(b.checkWin(b.myTurn(5),5));
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.blueTurn(5),5));
+		System.out.println(b.checkWin(b.myTurn(5),5));
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.blueTurn(6),6));
+		System.out.println(b.checkWin(b.myTurn(6),6));
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.blueTurn(6),6));
+		System.out.println(b.checkWin(b.myTurn(6),6));
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.blueTurn(6),6));
+		System.out.println(b.checkWin(b.myTurn(6),6));
 		System.out.println(b.toString() + "\n");
 		
-		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
+		System.out.println(b.checkWin(b.theirTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.redTurn(column),column)); column++;
+		System.out.println(b.checkWin(b.theirTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.blueTurn(column),column)); column++;
+		System.out.println(b.checkWin(b.myTurn(column),column)); column++;
 		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.redTurn(3),3));
+		System.out.println(b.checkWin(b.theirTurn(3),3));
 		System.out.println(b.toString() + "\n");
 		
 		

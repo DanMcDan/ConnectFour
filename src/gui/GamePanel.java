@@ -3,14 +3,9 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-
 import game.Board;
 
 public class GamePanel extends JPanel{
@@ -75,10 +70,10 @@ public class GamePanel extends JPanel{
 	public void updatePanels(Board board) {
 		for (int i = 0; i < panels.length; i++) {
 			for (int j = 0; j < panels[i].length; j++) {
-				if (board.getMap()[i][j] == Board.RED_PIECE)
+				if (board.getMap()[i][j] == Board.THEIR_PIECE)
 					panels[i][j].setBackground(Color.RED);
 				
-				else if (board.getMap()[i][j] == Board.BLUE_PIECE)
+				else if (board.getMap()[i][j] == Board.MY_PIECE)
 					panels[i][j].setBackground(Color.BLUE);
 			}
 		}
