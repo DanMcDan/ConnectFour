@@ -8,7 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import game.Board;
 
-public class GamePanel extends JPanel{
+class GamePanel extends JPanel{
 	private static final long serialVersionUID = -9100426103735670345L;
 	
 	//These change the size of the board

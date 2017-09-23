@@ -1,6 +1,5 @@
 package game;
 
-
 /**
  * Board class containing a "map" of all the pieces involved in a game of Connect Four
  * 
@@ -55,7 +54,7 @@ public class Board {
 	}
 	
 	/**
-	 * Method for initiating the red players turn.
+	 * Method for initiating the enemy players turn.
 	 * @param 	col col recieves an index for the column number.<br>
 	 * 			The piece will seek the bottom most row of the column, where no pieces already are
 	 * 
@@ -78,7 +77,7 @@ public class Board {
 	}
 	
 	/**
-	 * Method for initiating the blue players turn.
+	 * Method for initiating the players turn.
 	 * @param 	col col recieves an index for the column number.<br>
 	 * 			The piece will seek the bottom most row of the column, where no pieces already are
 	 * 
@@ -147,6 +146,7 @@ public class Board {
 			}
 		//System.out.println("map["+h+"]["+v+"]"); //CONFIRMED WORKS
 		
+		//This entire thing goes down the diagonal line, from the top-left, to the bottom-right, until it hits a wall.
 		for (int i = 0; ;i++) {
 			if (h+i > map.length-1 || v+i > map[h+i].length-1)	break;
 			
@@ -171,77 +171,12 @@ public class Board {
 		for (int i = 0;;i++) {
 			if (h+i > map.length-1 || v-i < 0)	break;
 			
-			if (map[h+i][v-i] == player)	counter ++;
+			if (map[h+i][v-i] == player)	counter ++;//Similar to above steps to check line diagonally, but along a different axis.
 			else	counter = 0;
 			
 			if (counter == 4)	return true;
 		}
 		
-		return false;
-	}
-
-	//main method for testing only
-	public static void main(String[] args) {
-		
-		Board b = new Board(7,6);
-		int column = 0;
-		System.out.println(b.toString() + "\n");
-		
-		
-		
-		System.out.println(b.checkWin(b.myTurn(2),2));
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.myTurn(1),1));
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.myTurn(0),0));
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.myTurn(0),0));
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.myTurn(1),1));
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.myTurn(0),0));
-		System.out.println(b.toString() + "\n");
-		
-		
-		System.out.println(b.checkWin(b.theirTurn(column),column)); column++;
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.theirTurn(column),column)); column++;
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.theirTurn(column),column)); column++;
-		System.out.println(b.toString() + "\n");
-		/*System.out.println(b.checkWin(b.redTurn(column),column));*/ column++;
-		//System.out.println(b.toString() + "\n");
-		
-		System.out.println(b.checkWin(b.myTurn(4),4));
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.myTurn(5),5));
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.myTurn(5),5));
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.myTurn(6),6));
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.myTurn(6),6));
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.myTurn(6),6));
-		System.out.println(b.toString() + "\n");
-		
-		System.out.println(b.checkWin(b.theirTurn(column),column)); column++;
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.theirTurn(column),column)); column++;
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.myTurn(column),column)); column++;
-		System.out.println(b.toString() + "\n");
-		System.out.println(b.checkWin(b.theirTurn(3),3));
-		System.out.println(b.toString() + "\n");
-		
-		
-		
-		
-		/*
-		 * The statement to execute a turn and check if that was a winning turn is:
-		 * b.checkWin(b.redTurn(column),column);
-		 * or 
-		 * b.checkWin(b.blueTurn(column),column)
-		 */
+		return false;//Finally confirmed to not be a win
 	}
 }

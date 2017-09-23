@@ -14,7 +14,7 @@ import javax.swing.JTextField;
  * @author Daniel McCann
  *
  */
-public class MenuPanel extends JPanel{
+class MenuPanel extends JPanel{
 	private static final long serialVersionUID = -2304450763260224381L;
 	
 	private JTextArea chatArea 		= new JTextArea();
@@ -29,7 +29,7 @@ public class MenuPanel extends JPanel{
 		setBorder(BorderFactory.createTitledBorder("Chat"));
 		setLayout(new BorderLayout());
 		
-		userName = JOptionPane.showInputDialog(null,"Enter stuff");
+		userName = JOptionPane.showInputDialog(null,"Enter your chat name");
 		
 		constructInterface();
 	}

@@ -1,4 +1,4 @@
-package chat;
+package game;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;

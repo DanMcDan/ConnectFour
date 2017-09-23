@@ -12,7 +12,6 @@ public class ConnectFourDriverClient {
 		Socket s = null;
 		String adder = JOptionPane.showInputDialog("Enter server IP",null);
 		
-		char player = 0;
 		PlayerFrame pf;
 		
 		//Board dimensions
@@ -31,7 +30,7 @@ public class ConnectFourDriverClient {
 		}
 		
 		//Open the window
-		pf = new PlayerFrame(adder, s, player, boardWidth, boardHeight);
+		pf = new PlayerFrame(adder, s, boardWidth, boardHeight);
 		pf.setVisible(true);
 	}
 }
