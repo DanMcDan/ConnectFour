@@ -2,8 +2,7 @@ package application;
 
 import java.io.*;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.net.SocketException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -22,8 +21,10 @@ class GameThread implements Runnable, Observer{
 	 * Constructor for Runnable object used to relay turns and messages. If an entire Board object is sent, it means the player who sent it won the game
 	 * @param pl1
 	 * @param pl2
+	 * @param ss 
 	 */
 	public GameThread(Socket pl1, Socket pl2) {
+		
 		this.pl1 = pl1;
 		this.pl2 = pl2;
 		
@@ -31,15 +32,17 @@ class GameThread implements Runnable, Observer{
 		{
 			oos1 = new ObjectOutputStream(pl1.getOutputStream());
 			oos2 = new ObjectOutputStream(pl2.getOutputStream());
-		}
-		catch (IOException e) {e.printStackTrace();}
+			
+		}catch (IOException e) {e.printStackTrace();}
 		
+		il1 = new InputListener(pl1, this);
+		il2 = new InputListener(pl2, this);
 		
-		il1 = new InputListener(this.pl1, this);
-		il2 = new InputListener(this.pl2, this);
 		Thread th1 = new Thread(il1);
 		Thread th2 = new Thread(il2);
-		th1.start(); th2.start();//Start listening
+		
+		th1.start();
+		th2.start();//Start listening
 	}
 	
 	@Override
@@ -55,20 +58,11 @@ class GameThread implements Runnable, Observer{
 	public void update(Observable o, Object arg) {
 		try 
 		{
-			
-			if (arg instanceof String) {
-				PrintWriter p = new PrintWriter(new File(new SimpleDateFormat("'res/'yyyy-MM-dd hh-mm-ss'.game'").format(new Date())));
-				p.print((String)arg);
-				p.close();
-				
-			}
-				//NEW if statement
-			if (o == il1) {
-				oos2.writeObject(arg);
-			} else if (o == il2) {
-				oos1.writeObject(arg);
-			}
+			//Used to relay turns/messages between players
+			if 		(o == il1)	oos2.writeObject(arg);
+			else if (o == il2) 	oos1.writeObject(arg);
 		}
-		catch (IOException e) {e.printStackTrace();}
+		catch (SocketException 	e) 	{e.printStackTrace();}
+		catch (IOException 		e) 	{e.printStackTrace();}
 	}
 }

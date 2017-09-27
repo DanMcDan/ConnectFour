@@ -29,10 +29,14 @@ public class PlayerFrame extends JFrame implements Observer {
 	private MenuPanel menuPanel = new MenuPanel();
 	private GamePanel gamePanel;
 	
+	private Socket socket;
+	private String addr;
 	private ObjectOutputStream oos;
 	
 	//private Socket socket;
 	private Board board;
+	private int boardWidth;
+	private int boardHeight;
 	
 	
 	/**
@@ -46,6 +50,11 @@ public class PlayerFrame extends JFrame implements Observer {
 	public PlayerFrame(String title, Socket socket, int boardWidth, int boardHeight) {
 		super(title);
 		
+		this.addr = title;
+		this.socket = socket;
+		this.boardWidth = boardWidth;
+		this.boardHeight = boardHeight;
+		
 		board = new Board(boardWidth,boardHeight);
 		gamePanel = new GamePanel(boardWidth,boardHeight);//Set the width/height to 7x6
 		createTurnListeners();
@@ -56,8 +65,9 @@ public class PlayerFrame extends JFrame implements Observer {
 		{
 			oos = new ObjectOutputStream(socket.getOutputStream());
 		}
-		
 		catch (IOException e1) {e1.printStackTrace();}
+		
+		
 		Thread th = new Thread(new InputListener(socket, this));
 		th.start();//Start listening
 		
@@ -75,8 +85,8 @@ public class PlayerFrame extends JFrame implements Observer {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				//TODO: add closing operations as needed, in this area
-				System.exit(0);
+				disconnect();
+				System.exit(0);//Close game
 			}
 		});
 		
@@ -96,6 +106,14 @@ public class PlayerFrame extends JFrame implements Observer {
 		wrapper.add(menuPanel, c);	//adding the game UI and the menu to the wrapper panel
 	}
 	
+	
+	private void disconnect() {//TODO
+		try
+		{
+			oos.close();
+			socket.close();			
+		} catch (IOException e) {e.printStackTrace();}
+	}
 	
 	
 	/**
@@ -150,7 +168,14 @@ public class PlayerFrame extends JFrame implements Observer {
 	 * @param column
 	 */
 	private void makeTurn(int column) {
-		gameWon = board.checkWin(board.myTurn(column), column);
+		int row = board.myTurn(column);
+		
+		if (row == -10) {
+			menuPanel.getChatArea().append("That column is invalid!\n");
+			return;
+		}
+		
+		gameWon = board.checkWin(row, column);
 		
 		updateBoard();
 		disableButtons();
@@ -161,7 +186,13 @@ public class PlayerFrame extends JFrame implements Observer {
 		
 			if (gameWon) {
 				oos.writeObject(board.toString());
-				JOptionPane.showMessageDialog(this, "You win!");
+				if (JOptionPane.showConfirmDialog(this, "You win!\nPlay again?") == JOptionPane.YES_OPTION) {
+					//System.exit(0);//TODO: MAKE GAME REPLAY
+					requeue();
+				} else {
+					disconnect();
+					System.exit(0);//TODO: MAKE GAME CLOSE, THEN LOOK FOR PARTNER FOR SECOND PLAYER
+				}
 			}
 		} catch (IOException e) {e.printStackTrace();}
 	}
@@ -199,16 +230,42 @@ public class PlayerFrame extends JFrame implements Observer {
 			Message m = (Message) arg;
 			menuPanel.getChatArea().append(m.toString());
 		}
+		//Enemy turn sent.
+		//checks if its a winning turn. if it is, then ask to replay
 		else if (arg instanceof Integer) {
-			board.theirTurn((int)arg);
-			gamePanel.updatePanels(board);
-			enableButtons();
-		}
-		else if (arg instanceof String) {
-			JOptionPane.showMessageDialog(this, "You lose my dude.");
-			disableButtons();
-		}
+			if (board.checkWin(board.theirTurn((int)arg), (int)arg)) {
+				gamePanel.updatePanels(board);
+				
+				if (JOptionPane.showConfirmDialog(this, "You lost.\nTry again?") == JOptionPane.YES_OPTION) {
+					requeue();
+				}
+				else {
+					disconnect();
+					System.exit(0);//TODO: MAKE GAME CLOSE, THEN LOOK FOR PARTNER FOR SECOND PLAYER
+				}
+				
+			} else {
+				gamePanel.updatePanels(board);
+				enableButtons();
+			}
+		} //else if (arg instanceof String) {
+			
+		//}
 		
+	}
+	
+	
+	private void requeue() {
+		try
+		{
+			disconnect();
+			socket = new Socket(addr, 2282);
+			board = new Board(boardWidth,boardHeight);
+			updateBoard();
+			enableButtons();
+			
+			
+		} catch (IOException e) {e.printStackTrace();}
 	}
 	
 	
@@ -228,7 +285,6 @@ public class PlayerFrame extends JFrame implements Observer {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
 			makeTurn(column);
 		}
 		

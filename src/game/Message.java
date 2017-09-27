@@ -10,6 +10,11 @@ public class Message implements Serializable{
 	private String text;
 	private String name;
 	
+	/**
+	 * Message object, meant to be sent through object streams, and recieved through InputListener objects.
+	 * @param text text is the string containing the actual contents of the message.
+	 * @param name name is the chat name of the person who sent the message.
+	 */
 	public Message(String text, String name) {
 		this.text = text;
 		this.name = name;

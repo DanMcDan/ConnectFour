@@ -8,9 +8,12 @@ package game;
  */
 public class Board {
 	
-	public static final char MY_PIECE = 'X';
-	public static final char THEIR_PIECE = 'O';
-	public static final char EMPTY_PIECE = '*';
+	public static final char 	MY_PIECE = 'X',
+								THEIR_PIECE = 'O',
+								EMPTY_PIECE = '*';
+	
+	private int boardWidth,
+				boardHeight;
 
 	private char map[][];
 	
@@ -23,10 +26,20 @@ public class Board {
 	public Board(int boardWidth, int boardHeight) {
 		map = new char[boardHeight][boardWidth];
 		
+		this.boardWidth = boardWidth;
+		this.boardHeight = boardHeight;
 		
 		for(int i = 0; i < map.length; i++)
 			for(int j = 0; j < map[i].length; j++)
 				map[i][j] = EMPTY_PIECE;
+	}
+	
+	public int getBoardWidth() {
+		return boardWidth;
+	}
+	
+	public int getBoardHeight() {
+		return boardHeight;
 	}
 	
 	/**
@@ -54,16 +67,16 @@ public class Board {
 	}
 	
 	/**
-	 * Method for initiating the enemy players turn.
+	 * Method for recording the enemy players turn.
 	 * @param 	col col recieves an index for the column number.<br>
 	 * 			The piece will seek the bottom most row of the column, where no pieces already are
 	 * 
-	 * @return 	Returns -1 if the insert turn was unsuccessful<br>
-	 * 			Returns 0 if the column is full of other pieces<br>
+	 * @return 	Returns -1 if the insert turn was unsuccessful (This should never happen)<br>
+	 * 			Returns -10 if the column is full of other pieces<br>
 	 * 			Returns the row that the piece was placed in if column was valid
 	 */
 	public int theirTurn(int col) {
-		if (map[0][col] != EMPTY_PIECE) return 0;//This return is just for consistency with checkWin 
+		if (map[0][col] != EMPTY_PIECE) return -10;//This return is just in case there needs to be a different result from playing into a filled column
 	
 		//Loops through and finds where the piece should be placed
 		for (int i = 0; i <= map.length - 1; i++) {
@@ -73,20 +86,20 @@ public class Board {
 			}			 //		 when using checkWin, the column must be used with this return value
 		}
 		
-		return -1;
+		return -1;//Insert failed. There is really no reason that this should happen.
 	}
 	
 	/**
-	 * Method for initiating the players turn.
+	 * Method for recording the players turn.
 	 * @param 	col col recieves an index for the column number.<br>
 	 * 			The piece will seek the bottom most row of the column, where no pieces already are
 	 * 
-	 * @return 	Returns -1 if the insert turn was unsuccessful<br>
-	 * 			Returns -10 if the column is full of other pieces<br>
-	 * 			Returns the row that the piece was placed in if column was valid
+	 * @return 	Returns -1 if the insert turn was unsuccessful (This should never happen).<br>
+	 * 			Returns -10 if the column is full of other pieces.<br>
+	 * 			If the insert was successful, then the row where the piece landed in is returned.
 	 */
 	public int myTurn(int col) {
-		if (map[0][col] != EMPTY_PIECE) return -10;//This return is just for consistency with checkWin 
+		if (map[0][col] != EMPTY_PIECE) return -10;//This return is just in case there needs to be a different result from playing into a filled column
 	
 		//Loops through and finds where the piece should be placed, then places it
 		for (int i = 0; i <= map.length - 1; i++) {
@@ -95,13 +108,13 @@ public class Board {
 				return i;//NOTE: This returns the row that the spot was found in
 			}			 //		 when using checkWin, the column must be used with this return value
 		}
-		return -1;
+		return -1;//Insert failed. There is really no reason that this should happen.
 	}
 	
 	
 	/**
 	 * Method that takes the coordinates of the grid to check win conditions on
-	 * @param row the row of the piece in question
+	 * @param row the row of the piece in question (Can be taken from the myTurn or theirTurn methods)
 	 * @param col the column of the piece in question
 	 * @return returns true if the specified coordinate satisfies at least one win condition
 	 */
@@ -177,6 +190,6 @@ public class Board {
 			if (counter == 4)	return true;
 		}
 		
-		return false;//Finally confirmed to not be a win
+		return false;//Finally confirmed to not be a winning move
 	}
 }

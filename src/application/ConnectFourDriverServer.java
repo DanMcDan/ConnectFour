@@ -10,31 +10,27 @@ public class ConnectFourDriverServer {
 		{
 			Socket[] clients;
 			GameThread gt;
-			ServerSocket ss = new ServerSocket(2282);
-			int threads = 0;
 			
-			//Waits for incoming players
+			@SuppressWarnings("resource")
+			ServerSocket ss = new ServerSocket(2282);
+			
 			while (true) {
-				clients = new Socket[2];
+				clients = new Socket[2];//"clients" refrences a new array
 				for(int i = 0;i < clients.length;i++) {
 					System.out.println("Looking for connection...");
 					clients[i] = (ss.accept());//wait for connection
 					System.out.println("Connected!");
 					
-					if (i == 1) {
+					if (i == clients.length-1) {//When this is true, we can be sure that there are 2 players connected
 						System.out.println("Match starting...");
-						gt = new GameThread(clients[0], clients[1]);
-						Thread th = new Thread(gt);//Players split off into their own thread, where their game continues forever
+						Thread th = new Thread(new GameThread(clients[0], clients[1]));//Players split off into their own thread
 						th.start();
 						System.out.println("Done!");
 					}
 					
 				}
-				if (threads == 10) break;
-				else threads++;
 				
 			}
-			ss.close();
 			
 		}catch (Exception e) {e.printStackTrace();}
 	}

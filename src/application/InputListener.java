@@ -5,7 +5,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JOptionPane;
 
 public class InputListener extends Observable implements Runnable {
 	private Socket s;
@@ -33,8 +32,8 @@ public class InputListener extends Observable implements Runnable {
 				notifyObservers(o);
 			}
 		}
-		catch(SocketException			e)	{JOptionPane.showMessageDialog(null, "Socket Disconnect");}
-		catch(EOFException				e)	{e.printStackTrace();}
+		catch(SocketException			e)	{System.out.println("Player Disconnect");}
+		catch(EOFException				e)	{System.out.println("Socket Closed");}
 		catch(IOException				e)	{e.printStackTrace();}
 		catch(ClassNotFoundException	e)	{e.printStackTrace();}
 	}
