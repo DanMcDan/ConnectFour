@@ -29,14 +29,13 @@ public class PlayerFrame extends JFrame implements Observer {
 	private MenuPanel menuPanel = new MenuPanel();
 	private GamePanel gamePanel;
 	
+	private Thread th;
 	private Socket socket;
 	private String addr;
 	private ObjectOutputStream oos;
 	
 	//private Socket socket;
 	private Board board;
-	private int boardWidth;
-	private int boardHeight;
 	
 	
 	/**
@@ -52,8 +51,6 @@ public class PlayerFrame extends JFrame implements Observer {
 		
 		this.addr = title;
 		this.socket = socket;
-		this.boardWidth = boardWidth;
-		this.boardHeight = boardHeight;
 		
 		board = new Board(boardWidth,boardHeight);
 		gamePanel = new GamePanel(boardWidth,boardHeight);//Set the width/height to 7x6
@@ -68,7 +65,7 @@ public class PlayerFrame extends JFrame implements Observer {
 		catch (IOException e1) {e1.printStackTrace();}
 		
 		
-		Thread th = new Thread(new InputListener(socket, this));
+		th = new Thread(new InputListener(socket, this));
 		th.start();//Start listening
 		
 		setLayout(new BorderLayout());
@@ -111,7 +108,12 @@ public class PlayerFrame extends JFrame implements Observer {
 		try
 		{
 			oos.close();
-			socket.close();			
+			oos = null;
+			socket.close();	
+			socket = null;
+			th.interrupt();
+			th = null;
+			
 		} catch (IOException e) {e.printStackTrace();}
 	}
 	
@@ -259,11 +261,13 @@ public class PlayerFrame extends JFrame implements Observer {
 		try
 		{
 			disconnect();
-			socket = new Socket(addr, 2282);
-			board = new Board(boardWidth,boardHeight);
+			board.resetBoard();
 			updateBoard();
+			socket = new Socket(addr, 2282);
+			th = new Thread(new InputListener(socket, this));
+			th.start();
+			oos = new ObjectOutputStream(socket.getOutputStream());
 			enableButtons();
-			
 			
 		} catch (IOException e) {e.printStackTrace();}
 	}

@@ -34,6 +34,12 @@ public class Board {
 				map[i][j] = EMPTY_PIECE;
 	}
 	
+	public void resetBoard() {
+		for(int i = 0; i < map.length; i++)
+			for(int j = 0; j < map[i].length; j++)
+				map[i][j] = EMPTY_PIECE;
+	}
+	
 	public int getBoardWidth() {
 		return boardWidth;
 	}

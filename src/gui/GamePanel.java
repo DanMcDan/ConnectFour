@@ -75,6 +75,9 @@ class GamePanel extends JPanel{
 				
 				else if (board.getMap()[i][j] == Board.MY_PIECE)
 					panels[i][j].setBackground(Color.BLUE);
+				
+				else
+					panels[i][j].setBackground(Color.GRAY);
 			}
 		}
 	}
