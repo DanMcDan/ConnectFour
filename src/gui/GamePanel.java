@@ -15,7 +15,6 @@ class GamePanel extends JPanel{
 	private int boardWidth;
 	private int boardHeight;
 	
-//	private Board board = new Board(7,6);
 
 	private JPanel gameBoard;
 	private JPanel[][] panels;
@@ -33,7 +32,7 @@ class GamePanel extends JPanel{
 		this.boardHeight = boardHeight;
 		this.boardWidth = boardWidth;
 		
-		gameBoard = new JPanel(new GridLayout(boardHeight+1,boardWidth));
+		gameBoard = new JPanel(new GridLayout(boardHeight+1,boardWidth));//Height+1 to make room for buttons
 		panels = new JPanel[boardHeight][boardWidth];
 		turnButtons = new JButton[boardWidth];
 		
@@ -67,6 +66,10 @@ class GamePanel extends JPanel{
 		}
 	}
 	
+	/**
+	 * Method that takes a game board and updates the panel colours to match the board state.
+	 * @param board board represents the players game board after a turn was taken.
+	 */
 	public void updatePanels(Board board) {
 		for (int i = 0; i < panels.length; i++) {
 			for (int j = 0; j < panels[i].length; j++) {
@@ -82,12 +85,11 @@ class GamePanel extends JPanel{
 		}
 	}
 	
+	/**
+	 * public getter for the horizontal buttons
+	 * @return returns the array of buttons along the top row of the graphical board
+	 */
 	public JButton[] getButtons() {
 		return turnButtons;
 	}
-	public JPanel[][] getPanels() {
-		return panels;
-	}
-	
-	
 }

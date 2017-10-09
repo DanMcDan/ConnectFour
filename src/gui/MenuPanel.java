@@ -54,18 +54,34 @@ class MenuPanel extends JPanel{
 		
 	}
 	
+	/**
+	 * getter for the send button
+	 * @return returns the send button
+	 */
 	public JButton getChatButton() {
 		return chatButton;
 	}
-
+	
+	/**
+	 * public getter for the box where the player would type their messages into
+	 * @return returns a text field to type chat into
+	 */
 	public JTextField getChatField() {
 		return chatField;
 	}
 	
+	/**
+	 * public getter for the chat display area
+	 * @return returns a text field to display the chat in
+	 */
 	public JTextArea getChatArea() {
 		return chatArea;
 	}
 	
+	/**
+	 * Method used to get the players chat name
+	 * @return returns the players chat name
+	 */
 	public String getUserName() {
 		return userName;
 	}

@@ -12,23 +12,18 @@ public class Board {
 								THEIR_PIECE = 'O',
 								EMPTY_PIECE = '*';
 	
-	private int boardWidth,
-				boardHeight;
 
 	private char map[][];
 	
 	/**
-	 * Constructor for the game board
+	 * Constructor for the game board. Creates a 2d array of characters, where empty characters are asterisks
 	 * 
 	 * @param boardWidth takes the intended width of the game board
 	 * @param boardHeight takes the intended height of the game board
 	 */
 	public Board(int boardWidth, int boardHeight) {
 		map = new char[boardHeight][boardWidth];
-		
-		this.boardWidth = boardWidth;
-		this.boardHeight = boardHeight;
-		
+
 		for(int i = 0; i < map.length; i++)
 			for(int j = 0; j < map[i].length; j++)
 				map[i][j] = EMPTY_PIECE;
@@ -80,10 +75,11 @@ public class Board {
 		for (int i = 0; i <= map.length - 1; i++) {
 			if (i == map.length-1 || map[i+1][col] != EMPTY_PIECE) {
 				map[i][col] = THEIR_PIECE;
-				return i;//NOTE: This returns the row that the spot was found in
-			}			 //		 when using checkWin, the column must be used with this return value
+				return i;//NOTE: 	This returns the row that the spot was found in
+			}			  //		when using checkWin, the column must be used with this return value
+						  //		IE: checkWin(theirTurn(col),col);
+			  			  //		This way, all I need from the player is the column, and the row is calculated only once
 		}
-		
 		return -1;//Insert failed. There is really no reason that this should happen.
 	}
 	
@@ -92,7 +88,7 @@ public class Board {
 	 * @param 	col col recieves an index for the column number.<br>
 	 * 			The piece will seek the bottom most row of the column, where no pieces already are
 	 * 
-	 * @return 	Returns -1 if the insert turn was unsuccessful (This should never happen).<br>
+	 * @return 	Returns -1 if the insert turn was unsuccessful (This should never happen, if it does, something is wrong).<br>
 	 * 			Returns -10 if the column is full of other pieces.<br>
 	 * 			If the insert was successful, then the row where the piece landed in is returned.
 	 */
@@ -103,8 +99,10 @@ public class Board {
 		for (int i = 0; i <= map.length - 1; i++) {
 			if (i == map.length-1 || map[i+1][col] != EMPTY_PIECE) {
 				map[i][col] = MY_PIECE;
-				return i;//NOTE: This returns the row that the spot was found in
-			}			 //		 when using checkWin, the column must be used with this return value
+				return i;//NOTE: 	This returns the row that the piece landed in
+			}			  //	 	when using checkWin, the column must be used with this return value
+						  //		IE: checkWin(myTurn(col),col);
+						  //		This way, all I need from the player is the column, and the row is calculated only once
 		}
 		return -1;//Insert failed. There is really no reason that this should happen.
 	}
@@ -114,10 +112,11 @@ public class Board {
 	 * Method that takes the coordinates of the grid to check win conditions on
 	 * @param row the row of the piece in question (Can be taken from the myTurn or theirTurn methods)
 	 * @param col the column of the piece in question
-	 * @return returns true if the specified coordinate satisfies at least one win condition
+	 * @return returns true if the specified coordinate satisfies at least one win condition<br>
+	 * 			returns false if the specified coordinate is not a win, or if the row is invalid, which happens when the myTurn()/theirTurn() methods fail.
 	 */
 	public boolean checkWin(int row, int col) {
-		if(row < 0) return false;
+		if(row < 0) return false;//Check for 
 		if(map[row][col] == EMPTY_PIECE) return false;
 		
 		int counter = 0;
@@ -126,7 +125,7 @@ public class Board {
 		
 		//check vertical
 		for (int i = row; i < map.length; i++) {//Starts from the piece just placed, and works downward
-			if (map[i][col] == player) counter++;
+			if (map[i][col] == player) counter++;//There is no reason to check above the piece that's just been placed.
 			else counter = 0;//Counter resets if the streak is broken
 				
 			if (counter >= 4) return true;
@@ -134,7 +133,7 @@ public class Board {
 		counter = 0;
 		
 		//Check horizontal
-		for (int i = 0; i < map[row].length; i++) {
+		for (int i = 0; i < map[row].length; i++) {//Start at far right, check along the horizontal
 			if (map[row][i] == player) counter++;
 			else counter = 0;//Counter resets if the streak is broken
 				
@@ -144,8 +143,8 @@ public class Board {
 		
 		//Check Diagonal
 		//top left to bottom right
-		int h,//this is the row of one of the uppermost diagonals
-			v;//this is the col of one of the uppermost diagonals
+		int	h,//h and v are going to be the row (h) and the column (v) of one of the farthest diagonal pieces
+			v;
 		
 		//This gets the index of the top-leftmost diagonal
 		for (int i = 0;; i++)

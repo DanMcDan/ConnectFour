@@ -43,10 +43,10 @@ public class PlayerFrame extends JFrame implements Observer {
 	/**
 	 * Constructor for the window to be used as the game area for Connect Four.<br>
 	 * Sets bounds for window and constructs the <i>MenuPanel</i> and <i>GamePanel</i>
-	 * @param s String value to set the title of the window.
-	 * @param socket 
-	 * @throws IOException 
-	 * @throws UnknownHostException 
+	 * @param title title is the String value to set the title of the window.
+	 * @param socket socket represents the socket connected to the server
+	 * @param boardWidth boardWidth is an integer value representing the width of the game board
+	 * @param boardHeight boardHeight is an integer value representing the height of the game board
 	 */
 	public PlayerFrame(String title, Socket socket, int boardWidth, int boardHeight) {
 		super(title);
@@ -110,8 +110,10 @@ public class PlayerFrame extends JFrame implements Observer {
 		th.start();//Start listening
 	}
 	
-	
-	private void disconnect() {//TODO
+	/**
+	 * Method for disconnecting the client from the server. Used to either reset the connection, or close the game
+	 */
+	private void disconnect() {
 		try
 		{
 			oos.close();
@@ -155,7 +157,7 @@ public class PlayerFrame extends JFrame implements Observer {
 	}
 	
 	/**
-	 * Sends a Message object to the other player
+	 * Sends a Message object to the other player. Prevents users from just sending each other plain strings, which could cause a player to disconnect.
 	 */
 	private void sendMessage() {
 		if(!menuPanel.getChatField().getText().equals("")) {
@@ -175,7 +177,7 @@ public class PlayerFrame extends JFrame implements Observer {
 	
 	/**
 	 * Sends a turn to the other player, in the form of an Integer object, and updates the GUI
-	 * @param column
+	 * @param column column represents the column that the piece is being dropped into.
 	 */
 	private void makeTurn(int column) {
 		int row = board.myTurn(column);
@@ -235,7 +237,7 @@ public class PlayerFrame extends JFrame implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if (arg instanceof Message) {
+		if (arg instanceof Message) {//Message received
 			Message m = (Message) arg;
 			menuPanel.getChatArea().append(m.toString());
 		}
@@ -262,7 +264,7 @@ public class PlayerFrame extends JFrame implements Observer {
 			//Makes sure the user knows what the listener is telling them
 			menuPanel.getChatArea().append((String)arg);
 			
-			if (((String)arg).equals(DISCONNECT_MSG)) {
+			if (((String)arg).equals(DISCONNECT_MSG)) {//other player has disconnected
 				requeue();
 			}
 			
@@ -270,14 +272,16 @@ public class PlayerFrame extends JFrame implements Observer {
 		
 	}
 	
-	
+	/**
+	 * Method for playing another game after either the game ended, or the other player left.
+	 */
 	private void requeue() {
 		try
 		{
-			disconnect();
+			disconnect();//First we disconnect from the server
 			board.resetBoard();
 			updateBoard();
-			socket = new Socket(addr, 2282);
+			socket = new Socket(addr, 2282);//Then we enter the server again
 			th = new Thread(new InputListener(socket, this));
 			th.start();
 			oos = new ObjectOutputStream(socket.getOutputStream());

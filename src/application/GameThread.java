@@ -19,9 +19,8 @@ class GameThread implements Runnable, Observer{
 	
 	/**
 	 * Constructor for Runnable object used to relay turns and messages. If an entire Board object is sent, it means the player who sent it won the game
-	 * @param pl1
-	 * @param pl2
-	 * @param ss 
+	 * @param pl1 pl1 represents the first of the two players in the match
+	 * @param pl2 pl2 represents the second of the two players in the match
 	 */
 	public GameThread(Socket pl1, Socket pl2) {
 		
@@ -49,6 +48,7 @@ class GameThread implements Runnable, Observer{
 	public void run() {
 		try
 		{
+			//send a chat message to each player that a partner was found
 			oos1.writeObject("Player found at " + pl2.getInetAddress().toString()+"\n\n");
 			oos2.writeObject("Player found at " + pl1.getInetAddress().toString()+"\n\n");
 		}
@@ -61,8 +61,8 @@ class GameThread implements Runnable, Observer{
 		try 
 		{
 			//Used to relay turns/messages between players
-			if 		(o == il1)	oos2.writeObject(arg);
-			else if (o == il2) 	oos1.writeObject(arg);
+			if			(o == il1)	oos2.writeObject(arg);
+			else if		(o == il2) 	oos1.writeObject(arg);
 		}
 		catch (SocketException 	e) 	{e.printStackTrace();}
 		catch (IOException 		e) 	{e.printStackTrace();}

@@ -29,11 +29,11 @@ public class InputListener extends Observable implements Runnable {
 			while (true) {
 				Object o = ois.readObject();//NEVER NOT READING OBJECT
 				setChanged();
-				notifyObservers(o);
+				notifyObservers(o);//When object has been read, send it up to the observer
 			}
 		}
 		catch(SocketException			e)	{System.out.println("Player Disconnect");}
-		catch(EOFException				e)	{System.out.println("Socket Closed");}
+		catch(EOFException			e)	{System.out.println("Socket Closed");}
 		catch(IOException				e)	{e.printStackTrace();}
 		catch(ClassNotFoundException	e)	{e.printStackTrace();}
 	}

@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+/**
+ * public message class. Takes a message in string form, and wraps it up for transport.
+ * @author Daniel McCann
+ *
+ */
 public class Message implements Serializable{
 	private static final long serialVersionUID = 286658261238079800L;
 	
