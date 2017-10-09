@@ -47,10 +47,12 @@ class GameThread implements Runnable, Observer{
 	
 	@Override
 	public void run() {
-		
-			System.out.println("Client: "+pl1.getInetAddress().toString()+" as player: 1");
-			System.out.println("Client: "+pl2.getInetAddress().toString()+" as player: 2");
-			
+		try
+		{
+			oos1.writeObject("Player found at " + pl2.getInetAddress().toString()+"\n\n");
+			oos2.writeObject("Player found at " + pl1.getInetAddress().toString()+"\n\n");
+		}
+		catch (IOException e) {e.printStackTrace();}
 	}
 
 

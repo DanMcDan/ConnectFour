@@ -25,6 +25,8 @@ public class PlayerFrame extends JFrame implements Observer {
 	
 	private boolean gameWon = false;
 	
+	public static final String DISCONNECT_MSG = "Other player disconnected\nLooking for next player...\n\n";
+	
 	private JPanel wrapper 		= new JPanel(new GridBagLayout());
 	private MenuPanel menuPanel = new MenuPanel();
 	private GamePanel gamePanel;
@@ -65,9 +67,6 @@ public class PlayerFrame extends JFrame implements Observer {
 		catch (IOException e1) {e1.printStackTrace();}
 		
 		
-		th = new Thread(new InputListener(socket, this));
-		th.start();//Start listening
-		
 		setLayout(new BorderLayout());
 		add(wrapper, BorderLayout.CENTER);
 		
@@ -82,6 +81,10 @@ public class PlayerFrame extends JFrame implements Observer {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
+				try
+				{
+					oos.writeObject(DISCONNECT_MSG);
+				} catch (IOException e1) {e1.printStackTrace();}
 				disconnect();
 				System.exit(0);//Close game
 			}
@@ -101,6 +104,10 @@ public class PlayerFrame extends JFrame implements Observer {
 		c.gridx++;
 		c.weightx = 0.2;
 		wrapper.add(menuPanel, c);	//adding the game UI and the menu to the wrapper panel
+		
+		
+		th = new Thread(new InputListener(socket, this));
+		th.start();//Start listening
 	}
 	
 	
@@ -153,14 +160,15 @@ public class PlayerFrame extends JFrame implements Observer {
 	private void sendMessage() {
 		if(!menuPanel.getChatField().getText().equals("")) {
 			Message m = new Message(menuPanel.getChatField().getText(), menuPanel.getUserName());
+			
+			menuPanel.getChatArea().append(m.toString());
+			menuPanel.getChatField().setText("");
+			
 			try
 			{
 				oos.writeObject(m);
 			}
 			catch (IOException e) {e.printStackTrace();}
-			
-			menuPanel.getChatArea().append(m.toString());
-			menuPanel.getChatField().setText("");
 		}
 		
 	}
@@ -189,11 +197,10 @@ public class PlayerFrame extends JFrame implements Observer {
 			if (gameWon) {
 				oos.writeObject(board.toString());
 				if (JOptionPane.showConfirmDialog(this, "You win!\nPlay again?") == JOptionPane.YES_OPTION) {
-					//System.exit(0);//TODO: MAKE GAME REPLAY
 					requeue();
 				} else {
 					disconnect();
-					System.exit(0);//TODO: MAKE GAME CLOSE, THEN LOOK FOR PARTNER FOR SECOND PLAYER
+					System.exit(0);
 				}
 			}
 		} catch (IOException e) {e.printStackTrace();}
@@ -243,16 +250,23 @@ public class PlayerFrame extends JFrame implements Observer {
 				}
 				else {
 					disconnect();
-					System.exit(0);//TODO: MAKE GAME CLOSE, THEN LOOK FOR PARTNER FOR SECOND PLAYER
+					System.exit(0);
 				}
 				
 			} else {
 				gamePanel.updatePanels(board);
 				enableButtons();
 			}
-		} //else if (arg instanceof String) {
+		} else if (arg instanceof String) {
+			//Message from listener
+			//Makes sure the user knows what the listener is telling them
+			menuPanel.getChatArea().append((String)arg);
 			
-		//}
+			if (((String)arg).equals(DISCONNECT_MSG)) {
+				requeue();
+			}
+			
+		}
 		
 	}
 	

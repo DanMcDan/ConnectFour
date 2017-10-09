@@ -24,7 +24,9 @@ class MenuPanel extends JPanel{
 
 	private String userName;
 	
-
+	/**
+	 * Constructor for the menu panel. Used to hold the chat, and the text field for chatting.
+	 */
 	public MenuPanel() {
 		setBorder(BorderFactory.createTitledBorder("Chat"));
 		setLayout(new BorderLayout());
@@ -34,6 +36,9 @@ class MenuPanel extends JPanel{
 		constructInterface();
 	}
 	
+	/**
+	 * Private method for adding the panel components
+	 */
 	private void constructInterface() {
 		JPanel lowerPanel = new JPanel(new BorderLayout());
 		
@@ -42,10 +47,11 @@ class MenuPanel extends JPanel{
 		
 		add(lowerPanel, BorderLayout.SOUTH);
 		add(chatBox, BorderLayout.CENTER);
+		chatBox.getViewport().add(chatArea);
 		chatArea.setEditable(false);
 		chatArea.setWrapStyleWord(true);
 		chatArea.setLineWrap(true);
-		chatBox.getViewport().add(chatArea);
+		
 	}
 	
 	public JButton getChatButton() {

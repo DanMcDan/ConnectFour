@@ -40,14 +40,6 @@ public class Board {
 				map[i][j] = EMPTY_PIECE;
 	}
 	
-	public int getBoardWidth() {
-		return boardWidth;
-	}
-	
-	public int getBoardHeight() {
-		return boardHeight;
-	}
-	
 	/**
 	 * Public getter for the map
 	 * @return Returns a character array representing the game board
